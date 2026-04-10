@@ -47,9 +47,8 @@
       justify-content: center;
       overflow: hidden;
       background:
-        linear-gradient(rgba(15, 9, 17, 0.35), rgba(15, 9, 17, 0.68)),
-        radial-gradient(circle at 50% 22%, rgba(255, 205, 223, 0.45), transparent 22%),
-        linear-gradient(180deg, #9c7087 0%, #7a5567 24%, #5b394a 55%, #23131b 100%);
+        linear-gradient(rgba(15, 9, 17, 0.45), rgba(15, 9, 17, 0.72)),
+        url("./images/Lose.png") center center / cover no-repeat;
     }
 
     .title-bg-art {
@@ -57,39 +56,9 @@
       inset: 0;
       pointer-events: none;
       overflow: hidden;
-    }
-
-    .title-bg-art::before,
-    .title-bg-art::after {
-      content: "";
-      position: absolute;
-      border-radius: 999px;
-      filter: blur(2px);
-      opacity: 0.25;
-    }
-
-    .title-bg-art::before {
-      width: 360px;
-      height: 360px;
-      left: 8%;
-      bottom: 8%;
       background:
-        radial-gradient(circle at 50% 35%, #ffd7e5 0 16%, #b36b84 16% 42%, transparent 43%);
-      box-shadow:
-        0 -140px 0 -110px rgba(255,255,255,0.2),
-        0 0 120px rgba(255, 180, 208, 0.18);
-    }
-
-    .title-bg-art::after {
-      width: 360px;
-      height: 360px;
-      right: 8%;
-      bottom: 8%;
-      background:
-        radial-gradient(circle at 50% 35%, #d8e7ff 0 16%, #6f7bc8 16% 42%, transparent 43%);
-      box-shadow:
-        0 -140px 0 -110px rgba(255,255,255,0.16),
-        0 0 120px rgba(180, 200, 255, 0.16);
+        radial-gradient(circle at 18% 80%, rgba(255, 170, 205, 0.18), transparent 24%),
+        radial-gradient(circle at 82% 22%, rgba(190, 205, 255, 0.16), transparent 24%);
     }
 
     .title-content {
@@ -99,7 +68,7 @@
       text-align: center;
       padding: 48px 28px;
       border-radius: 28px;
-      background: rgba(22, 12, 20, 0.45);
+      background: rgba(22, 12, 20, 0.52);
       border: 1px solid rgba(255,255,255,0.14);
       backdrop-filter: blur(6px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.35);
@@ -510,6 +479,13 @@
       color: #3d194c;
     }
 
+    button.result-btn,
+    button.cutscene-btn {
+      background: linear-gradient(180deg, #fff6fa, #ffd7e6);
+      color: #4a1730;
+      min-width: 140px;
+    }
+
     button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
@@ -542,28 +518,55 @@
       justify-content: center;
       background: rgba(15,10,16,0.72);
       z-index: 10;
+      padding: 20px;
     }
 
-    .overlay.show { display: flex; }
+    .overlay.show {
+      display: flex;
+    }
 
-    .result-card {
-      width: min(460px, calc(100% - 30px));
-      background: linear-gradient(180deg, #fff6f8, #ffd8e5);
-      color: #4a1730;
-      border-radius: 28px;
-      padding: 28px;
+    .result-screen,
+    .cutscene-screen {
+      width: min(900px, calc(100% - 20px));
+      display: grid;
+      gap: 16px;
+      justify-items: center;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
     }
 
-    .result-card h3 {
-      margin: 0 0 10px;
-      font-size: 34px;
+    .result-image-wrap,
+    .cutscene-image-wrap {
+      width: min(900px, 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.14);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.38);
+      background: rgba(0,0,0,0.18);
     }
 
-    .result-card p {
-      margin: 0 0 18px;
+    .result-image,
+    .cutscene-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .result-caption,
+    .cutscene-caption {
+      padding: 10px 16px 0;
+      font-size: 16px;
       line-height: 1.6;
+      color: #fff0f5;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    }
+
+    .result-actions,
+    .cutscene-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     @media (max-width: 860px) {
@@ -714,11 +717,43 @@
         <div class="curtain"></div>
         <div class="floor"></div>
 
+        <!-- 컷씬 오버레이 -->
+        <div id="cutsceneOverlay" class="overlay">
+          <div class="cutscene-screen">
+            <div class="cutscene-image-wrap">
+              <img
+                id="cutsceneImage"
+                class="cutscene-image"
+                src="./images/BoroAppear.png"
+                alt="보로 등장 컷씬"
+              />
+            </div>
+            <div id="cutsceneCaption" class="cutscene-caption">
+              보로가 천천히 결투의 무대 위에 모습을 드러냈습니다.
+            </div>
+            <div class="cutscene-actions">
+              <button id="cutsceneStartBtn" class="cutscene-btn">결투 시작</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 결과 오버레이 -->
         <div id="overlay" class="overlay">
-          <div class="result-card">
-            <h3 id="resultTitle">승리!</h3>
-            <p id="resultText">상대를 우아하게 쓰러뜨렸습니다.</p>
-            <button onclick="restartGame()">다시 시작</button>
+          <div class="result-screen">
+            <div class="result-image-wrap">
+              <img
+                id="resultImage"
+                class="result-image"
+                src="./images/WinBoro.png"
+                alt="결과 화면"
+              />
+            </div>
+            <div id="resultCaption" class="result-caption">
+              결투가 끝났습니다.
+            </div>
+            <div class="result-actions">
+              <button onclick="restartGame()" class="result-btn">다시 시작</button>
+            </div>
           </div>
         </div>
       </div>
@@ -749,6 +784,13 @@
   </div>
 
   <script>
+    const ASSETS = {
+      titleBg: "./images/Lose.png",
+      cutsceneBoroAppear: "./images/BoroAppear.png",
+      win: "./images/WinBoro.png",
+      lose: "./images/Lose.png",
+    };
+
     const MODES = {
       normal: {
         key: "normal",
@@ -766,12 +808,13 @@
         enemyMiss: "보로의 공격이 빗나갔습니다.",
         enemyHit: "보로의 공격이 적중했습니다.",
         enemyCrit: "치명타! 보로가 날카로운 일격을 날렸습니다.",
-        winTitle: "승리!",
-        winText: "보로를 우아하게 쓰러뜨렸습니다.",
-        loseTitle: "패배",
-        loseText: "보로의 손맛에 무릎을 꿇었습니다.",
+        winCaption: "보로를 우아하게 쓰러뜨렸습니다.",
+        loseCaption: "보로의 손맛에 무릎을 꿇었습니다.",
         winMessage: "결투 종료. 나리의 손끝이 더 매서웠습니다.",
-        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요."
+        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요.",
+        useIntroCutscene: true,
+        cutsceneImage: ASSETS.cutsceneBoroAppear,
+        cutsceneCaption: "보로가 천천히 결투의 무대 위에 모습을 드러냈습니다."
       },
       boro: {
         key: "boro",
@@ -789,12 +832,13 @@
         enemyMiss: "나리의 공격이 빗나갔습니다.",
         enemyHit: "나리의 공격이 적중했습니다.",
         enemyCrit: "치명타! 나리가 날카로운 일격을 날렸습니다.",
-        winTitle: "승리!",
-        winText: "나리를 우아하게 쓰러뜨렸습니다.",
-        loseTitle: "패배",
-        loseText: "나리의 손맛에 무릎을 꿇었습니다.",
+        winCaption: "나리를 우아하게 쓰러뜨렸습니다.",
+        loseCaption: "나리의 손맛에 무릎을 꿇었습니다.",
         winMessage: "결투 종료. 보로의 손끝이 더 매서웠습니다.",
-        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요."
+        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요.",
+        useIntroCutscene: false,
+        cutsceneImage: ASSETS.cutsceneBoroAppear,
+        cutsceneCaption: ""
       }
     };
 
@@ -809,6 +853,7 @@
       gameOver: false,
       started: false,
       currentMode: "normal",
+      inCutscene: false,
     };
 
     const titleScreen = document.getElementById("titleScreen");
@@ -832,9 +877,15 @@
     const enemyFighter = document.getElementById("enemyFighter");
     const arena = document.getElementById("arena");
     const impact = document.getElementById("impact");
+
     const overlay = document.getElementById("overlay");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultText = document.getElementById("resultText");
+    const resultImage = document.getElementById("resultImage");
+    const resultCaption = document.getElementById("resultCaption");
+
+    const cutsceneOverlay = document.getElementById("cutsceneOverlay");
+    const cutsceneImage = document.getElementById("cutsceneImage");
+    const cutsceneCaption = document.getElementById("cutsceneCaption");
+    const cutsceneStartBtn = document.getElementById("cutsceneStartBtn");
 
     const playerNameTop = document.getElementById("playerNameTop");
     const enemyNameTop = document.getElementById("enemyNameTop");
@@ -874,7 +925,12 @@
         ? `${mode.playerName}의 턴`
         : `${mode.enemyName}의 턴`;
 
-      slapBtn.disabled = state.turn !== "player" || state.busy || state.gameOver || !state.started;
+      slapBtn.disabled =
+        state.turn !== "player" ||
+        state.busy ||
+        state.gameOver ||
+        !state.started ||
+        state.inCutscene;
     }
 
     function setMessage(text) {
@@ -882,7 +938,7 @@
     }
 
     function animateGauge() {
-      if (state.started && !state.gameOver) {
+      if (state.started && !state.gameOver && !state.inCutscene) {
         if (state.gaugeActive && state.turn === "player" && !state.busy) {
           state.marker += state.direction * 1.8;
 
@@ -947,20 +1003,32 @@
       checkGameOver();
     }
 
+    function showResultScreen(type) {
+      const mode = getMode();
+
+      if (type === "win") {
+        resultImage.src = ASSETS.win;
+        resultImage.alt = "승리 화면";
+        resultCaption.textContent = mode.winCaption;
+      } else {
+        resultImage.src = ASSETS.lose;
+        resultImage.alt = "패배 화면";
+        resultCaption.textContent = mode.loseCaption;
+      }
+
+      overlay.classList.add("show");
+    }
+
     function checkGameOver() {
       const mode = getMode();
 
       if (state.enemyHp <= 0) {
         state.gameOver = true;
-        resultTitle.textContent = mode.winTitle;
-        resultText.textContent = mode.winText;
-        overlay.classList.add("show");
+        showResultScreen("win");
         setMessage(mode.winMessage);
       } else if (state.playerHp <= 0) {
         state.gameOver = true;
-        resultTitle.textContent = mode.loseTitle;
-        resultText.textContent = mode.loseText;
-        overlay.classList.add("show");
+        showResultScreen("lose");
         setMessage(mode.loseMessage);
       }
 
@@ -970,7 +1038,7 @@
     function playerAttack() {
       const mode = getMode();
 
-      if (state.turn !== "player" || state.busy || state.gameOver || !state.started) return;
+      if (state.turn !== "player" || state.busy || state.gameOver || !state.started || state.inCutscene) return;
 
       state.busy = true;
       const timing = getTimingResult(state.marker);
@@ -1001,7 +1069,7 @@
       setMessage(mode.enemyReady);
 
       setTimeout(() => {
-        if (state.gameOver) return;
+        if (state.gameOver || state.inCutscene) return;
 
         const roll = Math.random();
         let damage = 0;
@@ -1033,6 +1101,27 @@
       }, 900);
     }
 
+    function openIntroCutscene() {
+      const mode = getMode();
+
+      state.inCutscene = true;
+      cutsceneImage.src = mode.cutsceneImage;
+      cutsceneImage.alt = `${mode.enemyName} 등장 컷씬`;
+      cutsceneCaption.textContent = mode.cutsceneCaption || `${mode.enemyName}가 등장했습니다.`;
+      cutsceneOverlay.classList.add("show");
+      setMessage(`${mode.enemyName}가 결투장에 등장하고 있습니다...`);
+      updateUI();
+    }
+
+    function closeIntroCutscene() {
+      const mode = getMode();
+
+      state.inCutscene = false;
+      cutsceneOverlay.classList.remove("show");
+      setMessage(mode.introMessage);
+      updateUI();
+    }
+
     function restartGame() {
       const mode = getMode();
 
@@ -1045,19 +1134,27 @@
       state.busy = false;
       state.gameOver = false;
       state.started = true;
+      state.inCutscene = false;
 
       applyModeToUI();
       overlay.classList.remove("show");
+      cutsceneOverlay.classList.remove("show");
       setMessage(mode.restartMessage);
       updateUI();
+
+      if (mode.useIntroCutscene) {
+        openIntroCutscene();
+      }
     }
 
     function startGame(modeKey = "normal") {
       state.currentMode = modeKey;
       applyModeToUI();
-      restartGame();
+
       titleScreen.classList.add("hidden");
       gameScreen.classList.remove("hidden");
+
+      restartGame();
     }
 
     function toggleSpecialMode() {
@@ -1081,6 +1178,7 @@
     specialModeBtn.addEventListener("click", toggleSpecialMode);
     boboModeBtn.addEventListener("click", () => startGame("boro"));
     exitBtn.addEventListener("click", exitGame);
+    cutsceneStartBtn.addEventListener("click", closeIntroCutscene);
 
     window.restartGame = restartGame;
 
