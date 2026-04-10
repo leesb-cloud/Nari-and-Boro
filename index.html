@@ -510,7 +510,7 @@
       align-items: center;
       justify-content: center;
       background: rgba(15,10,16,0.72);
-      z-index: 10;
+      z-index: 20;
       padding: 20px;
     }
 
@@ -522,34 +522,36 @@
     .cutscene-screen {
       position: relative;
       width: min(900px, calc(100% - 20px));
-      max-height: calc(100% - 20px);
-      display: grid;
-      gap: 12px;
-      justify-items: center;
-      align-content: center;
-      text-align: center;
+      height: min(460px, calc(100% - 20px));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .result-image-wrap,
     .cutscene-image-wrap {
-      width: min(900px, 100%);
+      position: relative;
+      width: 100%;
+      height: 100%;
       border-radius: 24px;
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.14);
       box-shadow: 0 20px 60px rgba(0,0,0,0.38);
       background: rgba(0,0,0,0.18);
-      position: relative;
     }
 
     .result-image,
     .cutscene-image {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
+      background: rgba(10, 6, 10, 0.45);
     }
 
-    .cutscene-ui {
+    .cutscene-ui,
+    .result-ui {
       position: absolute;
       left: 20px;
       right: 20px;
@@ -561,9 +563,10 @@
       flex-wrap: wrap;
       padding: 14px 16px;
       border-radius: 18px;
-      background: rgba(20, 12, 20, 0.72);
+      background: rgba(20, 12, 20, 0.84);
       border: 1px solid rgba(255,255,255,0.14);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.28);
     }
 
     .result-caption,
@@ -572,13 +575,6 @@
       line-height: 1.6;
       color: #fff0f5;
       text-shadow: 0 2px 10px rgba(0,0,0,0.35);
-    }
-
-    .result-caption {
-      padding: 10px 16px 0;
-    }
-
-    .cutscene-caption {
       padding: 0;
       text-align: left;
       flex: 1;
@@ -591,14 +587,23 @@
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
+      flex-shrink: 0;
     }
 
-    .cutscene-actions button {
+    .cutscene-actions button,
+    .result-actions button {
       padding: 12px 22px;
       font-size: 16px;
       font-weight: 900;
-      background: linear-gradient(180deg, #fff4f6, #ff9bb3);
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .cutscene-actions button {
+      background: linear-gradient(180deg, #fff4f6, #ff9bb3);
+    }
+
+    .result-actions button {
+      background: linear-gradient(180deg, #fff6fa, #ffd7e6);
     }
 
     @media (max-width: 860px) {
@@ -657,7 +662,14 @@
         padding: 16px 12px 4px;
       }
 
-      .cutscene-ui {
+      .result-screen,
+      .cutscene-screen {
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+      }
+
+      .cutscene-ui,
+      .result-ui {
         left: 12px;
         right: 12px;
         bottom: 12px;
@@ -665,12 +677,14 @@
         align-items: stretch;
       }
 
-      .cutscene-caption {
+      .cutscene-caption,
+      .result-caption {
         min-width: 0;
         text-align: center;
       }
 
-      .cutscene-actions {
+      .cutscene-actions,
+      .result-actions {
         justify-content: center;
       }
     }
@@ -678,7 +692,6 @@
 </head>
 <body>
   <div class="game-shell">
-    <!-- 타이틀 화면 -->
     <div id="titleScreen" class="screen title-screen">
       <div class="title-bg-art"></div>
 
@@ -707,7 +720,6 @@
       </div>
     </div>
 
-    <!-- 게임 화면 -->
     <div id="gameScreen" class="screen game hidden">
       <div class="game-title">나리와 보로: 산스의 결투</div>
 
@@ -796,15 +808,18 @@
               <img
                 id="resultImage"
                 class="result-image"
-                src="./images/WinBoro.jpg"
+                src="./images/WinBoro.png"
                 alt="결과 화면"
               />
-            </div>
-            <div id="resultCaption" class="result-caption">
-              결투가 끝났습니다.
-            </div>
-            <div class="result-actions">
-              <button onclick="restartGame()" class="result-btn">다시 시작</button>
+
+              <div class="result-ui">
+                <div id="resultCaption" class="result-caption">
+                  결투가 끝났습니다.
+                </div>
+                <div class="result-actions">
+                  <button onclick="restartGame()" class="result-btn">다시 시작</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -839,7 +854,7 @@
     const ASSETS = {
       titleBg: "./images/Lose.png",
       cutsceneBoroAppear: "./images/BoroAppear.png",
-      win: "./images/WinBoro.jpg",
+      win: "./images/WinBoro.png",
       lose: "./images/Lose.png",
     };
 
