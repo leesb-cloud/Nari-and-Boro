@@ -109,13 +109,6 @@
       flex-wrap: wrap;
     }
 
-    .title-note {
-      margin-top: 22px;
-      font-size: 13px;
-      color: #ffe4ec;
-      opacity: 0.72;
-    }
-
     .special-mode-panel {
       width: min(420px, 100%);
       margin: 18px auto 0;
@@ -545,6 +538,7 @@
       border: 2px solid rgba(255,255,255,0.14);
       box-shadow: 0 20px 60px rgba(0,0,0,0.38);
       background: rgba(0,0,0,0.18);
+      position: relative;
     }
 
     .result-image,
@@ -555,13 +549,21 @@
       object-fit: cover;
     }
 
-    .cutscene-bottom {
+    .cutscene-ui {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       gap: 14px;
       flex-wrap: wrap;
-      padding: 10px 16px 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(20, 12, 20, 0.72);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(4px);
     }
 
     .result-caption,
@@ -578,6 +580,9 @@
 
     .cutscene-caption {
       padding: 0;
+      text-align: left;
+      flex: 1;
+      min-width: 240px;
     }
 
     .result-actions,
@@ -652,8 +657,21 @@
         padding: 16px 12px 4px;
       }
 
-      .cutscene-bottom {
+      .cutscene-ui {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
         flex-direction: column;
+        align-items: stretch;
+      }
+
+      .cutscene-caption {
+        min-width: 0;
+        text-align: center;
+      }
+
+      .cutscene-actions {
+        justify-content: center;
       }
     }
   </style>
@@ -758,14 +776,14 @@
                 src="./images/BoroAppear.png"
                 alt="보로 등장 컷씬"
               />
-            </div>
 
-            <div class="cutscene-bottom">
-              <div id="cutsceneCaption" class="cutscene-caption">
-                보로가 천천히 결투의 무대 위에 모습을 드러냈습니다.
-              </div>
-              <div class="cutscene-actions">
-                <button id="cutsceneStartBtn" class="cutscene-btn">결투 시작</button>
+              <div class="cutscene-ui">
+                <div id="cutsceneCaption" class="cutscene-caption">
+                  보로가 천천히 결투의 무대 위에 모습을 드러냈습니다.
+                </div>
+                <div class="cutscene-actions">
+                  <button id="cutsceneStartBtn" class="cutscene-btn">결투 시작</button>
+                </div>
               </div>
             </div>
           </div>
