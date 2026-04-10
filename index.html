@@ -20,13 +20,148 @@
       padding: 20px;
     }
 
-    .game {
+    .game-shell {
       width: min(1100px, 100%);
+      position: relative;
+    }
+
+    .screen {
+      width: 100%;
       background: rgba(20, 12, 20, 0.88);
       border: 2px solid rgba(255,255,255,0.12);
       border-radius: 24px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.45);
       overflow: hidden;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 타이틀 화면 */
+    .title-screen {
+      position: relative;
+      min-height: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(15, 9, 17, 0.35), rgba(15, 9, 17, 0.68)),
+        radial-gradient(circle at 50% 22%, rgba(255, 205, 223, 0.45), transparent 22%),
+        linear-gradient(180deg, #9c7087 0%, #7a5567 24%, #5b394a 55%, #23131b 100%);
+    }
+
+    .title-bg-art {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .title-bg-art::before,
+    .title-bg-art::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(2px);
+      opacity: 0.25;
+    }
+
+    .title-bg-art::before {
+      width: 360px;
+      height: 360px;
+      left: 8%;
+      bottom: 8%;
+      background:
+        radial-gradient(circle at 50% 35%, #ffd7e5 0 16%, #b36b84 16% 42%, transparent 43%);
+      box-shadow:
+        0 -140px 0 -110px rgba(255,255,255,0.2),
+        0 0 120px rgba(255, 180, 208, 0.18);
+    }
+
+    .title-bg-art::after {
+      width: 360px;
+      height: 360px;
+      right: 8%;
+      bottom: 8%;
+      background:
+        radial-gradient(circle at 50% 35%, #d8e7ff 0 16%, #6f7bc8 16% 42%, transparent 43%);
+      box-shadow:
+        0 -140px 0 -110px rgba(255,255,255,0.16),
+        0 0 120px rgba(180, 200, 255, 0.16);
+    }
+
+    .title-content {
+      position: relative;
+      z-index: 1;
+      width: min(760px, calc(100% - 40px));
+      text-align: center;
+      padding: 48px 28px;
+      border-radius: 28px;
+      background: rgba(22, 12, 20, 0.45);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    .title-kicker {
+      font-size: 14px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #ffd3df;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .main-title {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.15;
+      letter-spacing: 0.02em;
+      color: #fff6fa;
+      text-shadow: 0 0 24px rgba(255, 130, 170, 0.28);
+    }
+
+    .title-sub {
+      margin: 18px auto 0;
+      max-width: 560px;
+      line-height: 1.7;
+      color: #ffe8ef;
+      opacity: 0.92;
+      font-size: 16px;
+    }
+
+    .title-buttons {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .title-note {
+      margin-top: 22px;
+      font-size: 13px;
+      color: #ffe4ec;
+      opacity: 0.72;
+    }
+
+    /* 게임 본편 */
+    .game {
+      width: 100%;
+      background: rgba(20, 12, 20, 0.88);
+      overflow: hidden;
+    }
+
+    .game-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      padding: 18px 0 6px;
+      color: #ffd4de;
+      text-shadow: 0 0 16px rgba(255, 105, 135, 0.4);
     }
 
     .topbar {
@@ -380,14 +515,42 @@
     }
 
     @media (max-width: 860px) {
-      .topbar { grid-template-columns: 1fr; }
-      .vs { display: none; }
-      .arena { height: 560px; }
-      .player { left: 20px; }
-      .enemy { right: 20px; }
-      .fighter { width: 180px; }
-      .portrait { width: 140px; height: 220px; }
-      .controls { grid-template-columns: 1fr; }
+      .title-screen {
+        min-height: 680px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .vs {
+        display: none;
+      }
+
+      .arena {
+        height: 560px;
+      }
+
+      .player {
+        left: 20px;
+      }
+
+      .enemy {
+        right: 20px;
+      }
+
+      .fighter {
+        width: 180px;
+      }
+
+      .portrait {
+        width: 140px;
+        height: 220px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
 
       .hand {
         top: 100px;
@@ -401,98 +564,125 @@
       .enemy.attack .hand {
         transform: translateX(-60px) rotate(182deg) scaleX(1.12);
       }
-  .game-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    padding: 18px 0 6px;
-    color: #ffd4de;
-    text-shadow: 0 0 16px rgba(255, 105, 135, 0.4);
+
+      .game-title {
+        font-size: 22px;
+        padding: 16px 12px 4px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="game">
-    <div class="topbar">
-      <div class="status player-status">
-        <h2>나리</h2>
-        <div class="hp-wrap">
-          <div class="hp-bar"><div id="playerHp" class="hp-fill"></div></div>
-          <strong id="playerHpText">100</strong>
+  <div class="game-shell">
+    <!-- 타이틀 화면 -->
+    <div id="titleScreen" class="screen title-screen">
+      <div class="title-bg-art"></div>
+
+      <div class="title-content">
+        <div class="title-kicker">NARI & BORO</div>
+        <h1 class="main-title">나리와 보로: 산스의 결투</h1>
+        <p class="title-sub">
+          우아함과 손맛이 지배하는 귀족 결투. 타이밍을 맞춰 보로의 뺨을 날리고,
+          산스의 결투에서 승리를 거머쥐세요.
+        </p>
+
+        <div class="title-buttons">
+          <button id="startBtn">게임 시작</button>
+          <button id="exitBtn" class="secondary">게임 종료</button>
         </div>
-      </div>
-      <div class="vs">VS</div>
-      <div class="status enemy">
-        <h2>보로</h2>
-        <div class="hp-wrap">
-          <div class="hp-bar"><div id="enemyHp" class="hp-fill"></div></div>
-          <strong id="enemyHpText">100</strong>
-        </div>
-      </div>
-    </div>
 
-    <div id="arena" class="arena">
-      <div id="turnBadge" class="turn-badge">플레이어 턴</div>
-
-      <div id="playerFighter" class="fighter player">
-        <div class="portrait">
-          <img
-            src="./images/player.png"
-            alt="플레이어 캐릭터"
-            class="character-image"
-            draggable="false"
-          />
-          <div class="hand"></div>
-        </div>
-        <div class="label">임시 캐릭터 A</div>
-      </div>
-
-      <div id="enemyFighter" class="fighter enemy">
-        <div class="portrait">
-          <img
-            src="./images/rival.png"
-            alt="라이벌 캐릭터"
-            class="character-image"
-            draggable="false"
-          />
-          <div class="hand"></div>
-        </div>
-        <div class="label">임시 캐릭터 B</div>
-      </div>
-
-      <div id="impact" class="impact">찰싹!</div>
-      <div class="curtain"></div>
-      <div class="floor"></div>
-
-      <div id="overlay" class="overlay">
-        <div class="result-card">
-          <h3 id="resultTitle">승리!</h3>
-          <p id="resultText">상대를 우아하게 쓰러뜨렸습니다.</p>
-          <button onclick="restartGame()">다시 시작</button>
+        <div class="title-note">
+          현재 타이틀 이미지는 임시 연출입니다.
         </div>
       </div>
     </div>
 
-    <div class="hud">
-      <div id="messageBox" class="message-box">
-        귀족의 결투가 시작되었습니다. 게이지가 움직일 때 타이밍을 맞춰 뺨을 날리세요.
-      </div>
+    <!-- 게임 화면 -->
+    <div id="gameScreen" class="screen game hidden">
+      <div class="game-title">나리와 보로: 산스의 결투</div>
 
-      <div class="controls">
-        <div class="timing-area">
-          <div class="timing-label">공격 타이밍 게이지 · 초록색이면 Perfect, 노란색이면 Good</div>
-          <div class="gauge">
-            <div class="zone good"></div>
-            <div class="zone perfect"></div>
-            <div id="marker" class="marker"></div>
+      <div class="topbar">
+        <div class="status player-status">
+          <h2>나리</h2>
+          <div class="hp-wrap">
+            <div class="hp-bar"><div id="playerHp" class="hp-fill"></div></div>
+            <strong id="playerHpText">100</strong>
           </div>
-          <div class="small">플레이어 턴일 때만 게이지가 움직입니다.</div>
         </div>
 
-        <div class="buttons">
-          <button id="slapBtn">뺨 때리기</button>
-          <button id="resetBtn" class="secondary">리셋</button>
+        <div class="vs">VS</div>
+
+        <div class="status enemy">
+          <h2>보로</h2>
+          <div class="hp-wrap">
+            <div class="hp-bar"><div id="enemyHp" class="hp-fill"></div></div>
+            <strong id="enemyHpText">100</strong>
+          </div>
+        </div>
+      </div>
+
+      <div id="arena" class="arena">
+        <div id="turnBadge" class="turn-badge">나리의 턴</div>
+
+        <div id="playerFighter" class="fighter player">
+          <div class="portrait">
+            <img
+              src="./images/player.png"
+              alt="나리 캐릭터"
+              class="character-image"
+              draggable="false"
+            />
+            <div class="hand"></div>
+          </div>
+          <div class="label">나리</div>
+        </div>
+
+        <div id="enemyFighter" class="fighter enemy">
+          <div class="portrait">
+            <img
+              src="./images/rival.png"
+              alt="보로 캐릭터"
+              class="character-image"
+              draggable="false"
+            />
+            <div class="hand"></div>
+          </div>
+          <div class="label">보로</div>
+        </div>
+
+        <div id="impact" class="impact">찰싹!</div>
+        <div class="curtain"></div>
+        <div class="floor"></div>
+
+        <div id="overlay" class="overlay">
+          <div class="result-card">
+            <h3 id="resultTitle">승리!</h3>
+            <p id="resultText">상대를 우아하게 쓰러뜨렸습니다.</p>
+            <button onclick="restartGame()">다시 시작</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud">
+        <div id="messageBox" class="message-box">
+          귀족의 결투가 시작되었습니다. 게이지가 움직일 때 타이밍을 맞춰 뺨을 날리세요.
+        </div>
+
+        <div class="controls">
+          <div class="timing-area">
+            <div class="timing-label">공격 타이밍 게이지 · 초록색이면 Perfect, 노란색이면 Good</div>
+            <div class="gauge">
+              <div class="zone good"></div>
+              <div class="zone perfect"></div>
+              <div id="marker" class="marker"></div>
+            </div>
+            <div class="small">나리의 턴일 때만 게이지가 움직입니다.</div>
+          </div>
+
+          <div class="buttons">
+            <button id="slapBtn">뺨 때리기</button>
+            <button id="resetBtn" class="secondary">리셋</button>
+          </div>
         </div>
       </div>
     </div>
@@ -508,7 +698,13 @@
       gaugeActive: true,
       busy: false,
       gameOver: false,
+      started: false,
     };
+
+    const titleScreen = document.getElementById("titleScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const startBtn = document.getElementById("startBtn");
+    const exitBtn = document.getElementById("exitBtn");
 
     const playerHpEl = document.getElementById("playerHp");
     const enemyHpEl = document.getElementById("enemyHp");
@@ -533,8 +729,8 @@
       playerHpText.textContent = state.playerHp;
       enemyHpText.textContent = state.enemyHp;
       markerEl.style.left = `${state.marker}%`;
-      turnBadge.textContent = state.turn === "player" ? "플레이어 턴" : "라이벌 턴";
-      slapBtn.disabled = state.turn !== "player" || state.busy || state.gameOver;
+      turnBadge.textContent = state.turn === "player" ? "나리의 턴" : "보로의 턴";
+      slapBtn.disabled = state.turn !== "player" || state.busy || state.gameOver || !state.started;
     }
 
     function setMessage(text) {
@@ -542,22 +738,22 @@
     }
 
     function animateGauge() {
-      if (state.gameOver) return;
+      if (state.started && !state.gameOver) {
+        if (state.gaugeActive && state.turn === "player" && !state.busy) {
+          state.marker += state.direction * 1.8;
 
-      if (state.gaugeActive && state.turn === "player" && !state.busy) {
-        state.marker += state.direction * 1.8;
+          if (state.marker >= 100) {
+            state.marker = 100;
+            state.direction = -1;
+          }
 
-        if (state.marker >= 100) {
-          state.marker = 100;
-          state.direction = -1;
+          if (state.marker <= 0) {
+            state.marker = 0;
+            state.direction = 1;
+          }
+
+          markerEl.style.left = `${state.marker}%`;
         }
-
-        if (state.marker <= 0) {
-          state.marker = 0;
-          state.direction = 1;
-        }
-
-        markerEl.style.left = `${state.marker}%`;
       }
 
       requestAnimationFrame(animateGauge);
@@ -611,13 +807,13 @@
       if (state.enemyHp <= 0) {
         state.gameOver = true;
         resultTitle.textContent = "승리!";
-        resultText.textContent = "상대를 우아하게 쓰러뜨렸습니다.";
+        resultText.textContent = "보로를 우아하게 쓰러뜨렸습니다.";
         overlay.classList.add("show");
-        setMessage("결투 종료. 당신의 손끝이 더 매서웠습니다.");
+        setMessage("결투 종료. 나리의 손끝이 더 매서웠습니다.");
       } else if (state.playerHp <= 0) {
         state.gameOver = true;
         resultTitle.textContent = "패배";
-        resultText.textContent = "라이벌의 손맛에 무릎을 꿇었습니다.";
+        resultText.textContent = "보로의 손맛에 무릎을 꿇었습니다.";
         overlay.classList.add("show");
         setMessage("결투 종료. 다음에는 더 정확한 타이밍을 노리세요.");
       }
@@ -626,19 +822,19 @@
     }
 
     function playerAttack() {
-      if (state.turn !== "player" || state.busy || state.gameOver) return;
+      if (state.turn !== "player" || state.busy || state.gameOver || !state.started) return;
 
       state.busy = true;
       const timing = getTimingResult(state.marker);
 
       if (timing === "perfect") {
-        setMessage("Perfect! 품위 있으면서도 치명적인 일격입니다.");
+        setMessage("Perfect! 나리의 품위 있으면서도 치명적인 일격입니다.");
         doHit("player", 28, "완벽!");
       } else if (timing === "good") {
-        setMessage("Good! 꽤 괜찮은 타이밍입니다.");
+        setMessage("Good! 나리의 타이밍이 꽤 좋았습니다.");
         doHit("player", 18, "찰싹!");
       } else {
-        setMessage("헛손질! 타이밍이 어긋났습니다.");
+        setMessage("헛손질! 나리의 타이밍이 어긋났습니다.");
         showImpact("MISS", arena.clientWidth * 0.62, 180);
       }
 
@@ -652,7 +848,7 @@
     }
 
     function enemyTurn() {
-      setMessage("라이벌이 자세를 가다듬고 있습니다...");
+      setMessage("보로가 자세를 가다듬고 있습니다...");
 
       setTimeout(() => {
         if (state.gameOver) return;
@@ -662,17 +858,17 @@
         let text = "";
 
         if (roll < 0.2) {
-          setMessage("라이벌의 공격이 빗나갔습니다.");
+          setMessage("보로의 공격이 빗나갔습니다.");
           showImpact("MISS", arena.clientWidth * 0.28, 180);
         } else if (roll < 0.75) {
           damage = 16;
           text = "짝!";
-          setMessage("라이벌의 공격이 적중했습니다.");
+          setMessage("보로의 공격이 적중했습니다.");
           doHit("enemy", damage, text);
         } else {
           damage = 24;
           text = "강타!";
-          setMessage("치명타! 라이벌이 날카로운 일격을 날렸습니다.");
+          setMessage("치명타! 보로가 날카로운 일격을 날렸습니다.");
           doHit("enemy", damage, text);
         }
 
@@ -680,7 +876,7 @@
           if (!state.gameOver) {
             state.turn = "player";
             state.busy = false;
-            setMessage("당신의 턴입니다. 게이지를 보고 타이밍을 맞추세요.");
+            setMessage("나리의 턴입니다. 게이지를 보고 타이밍을 맞추세요.");
             updateUI();
           }
         }, 700);
@@ -696,14 +892,34 @@
       state.gaugeActive = true;
       state.busy = false;
       state.gameOver = false;
+      state.started = true;
 
       overlay.classList.remove("show");
       setMessage("귀족의 결투가 다시 시작되었습니다. 이번엔 더 우아하게 뺨을 날려보세요.");
       updateUI();
     }
 
+    function startGame() {
+      restartGame();
+      titleScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+    }
+
+    function exitGame() {
+      const closed = window.close();
+
+      setTimeout(() => {
+        if (!closed) {
+          alert("브라우저에서는 보안상 창이 바로 닫히지 않을 수 있습니다. 탭을 직접 닫아 주세요.");
+        }
+      }, 100);
+    }
+
     slapBtn.addEventListener("click", playerAttack);
     resetBtn.addEventListener("click", restartGame);
+    startBtn.addEventListener("click", startGame);
+    exitBtn.addEventListener("click", exitGame);
+
     window.restartGame = restartGame;
 
     updateUI();
