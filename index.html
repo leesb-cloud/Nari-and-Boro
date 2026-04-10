@@ -525,69 +525,18 @@
       display: flex;
     }
 
-.result-screen,
-.cutscene-screen {
-  position: relative;
-  width: min(900px, calc(100% - 20px));
-  max-height: calc(100% - 20px);
-  display: grid;
-  gap: 12px;
-  justify-items: center;
-  align-content: center;
-  text-align: center;
-}
+    .result-screen,
+    .cutscene-screen {
+      position: relative;
+      width: min(900px, calc(100% - 20px));
+      max-height: calc(100% - 20px);
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      align-content: center;
+      text-align: center;
+    }
 
-.cutscene-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding: 10px 16px 0;
-}
-
-.result-image-wrap,
-.cutscene-image-wrap {
-  width: min(900px, 100%);
-  border-radius: 24px;
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.14);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.38);
-  background: rgba(0,0,0,0.18);
-}
-
-.result-image,
-.cutscene-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
-
-.result-caption,
-.cutscene-caption {
-  padding: 0;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #fff0f5;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
-}
-
-.result-actions,
-.cutscene-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.cutscene-actions button {
-  padding: 12px 22px;
-  font-size: 16px;
-  font-weight: 900;
-  background: linear-gradient(180deg, #fff4f6, #ff9bb3);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
     .result-image-wrap,
     .cutscene-image-wrap {
       width: min(900px, 100%);
@@ -606,13 +555,29 @@
       object-fit: cover;
     }
 
+    .cutscene-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 10px 16px 0;
+    }
+
     .result-caption,
     .cutscene-caption {
-      padding: 10px 16px 0;
       font-size: 16px;
       line-height: 1.6;
       color: #fff0f5;
       text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    }
+
+    .result-caption {
+      padding: 10px 16px 0;
+    }
+
+    .cutscene-caption {
+      padding: 0;
     }
 
     .result-actions,
@@ -621,6 +586,14 @@
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    .cutscene-actions button {
+      padding: 12px 22px;
+      font-size: 16px;
+      font-weight: 900;
+      background: linear-gradient(180deg, #fff4f6, #ff9bb3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
     @media (max-width: 860px) {
@@ -677,6 +650,10 @@
       .game-title {
         font-size: 22px;
         padding: 16px 12px 4px;
+      }
+
+      .cutscene-bottom {
+        flex-direction: column;
       }
     }
   </style>
@@ -772,27 +749,27 @@
         <div class="floor"></div>
 
         <!-- 컷씬 오버레이 -->
-<div id="cutsceneOverlay" class="overlay">
-  <div class="cutscene-screen">
-    <div class="cutscene-image-wrap">
-      <img
-        id="cutsceneImage"
-        class="cutscene-image"
-        src="./images/BoroAppear.png"
-        alt="보로 등장 컷씬"
-      />
-    </div>
+        <div id="cutsceneOverlay" class="overlay">
+          <div class="cutscene-screen">
+            <div class="cutscene-image-wrap">
+              <img
+                id="cutsceneImage"
+                class="cutscene-image"
+                src="./images/BoroAppear.png"
+                alt="보로 등장 컷씬"
+              />
+            </div>
 
-    <div class="cutscene-bottom">
-      <div id="cutsceneCaption" class="cutscene-caption">
-        보로가 천천히 결투의 무대 위에 모습을 드러냈습니다.
-      </div>
-      <div class="cutscene-actions">
-        <button id="cutsceneStartBtn" class="cutscene-btn">결투 시작</button>
-      </div>
-    </div>
-  </div>
-</div>
+            <div class="cutscene-bottom">
+              <div id="cutsceneCaption" class="cutscene-caption">
+                보로가 천천히 결투의 무대 위에 모습을 드러냈습니다.
+              </div>
+              <div class="cutscene-actions">
+                <button id="cutsceneStartBtn" class="cutscene-btn">결투 시작</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- 결과 오버레이 -->
         <div id="overlay" class="overlay">
