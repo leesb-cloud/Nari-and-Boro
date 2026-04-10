@@ -147,6 +147,53 @@
       opacity: 0.72;
     }
 
+    .special-mode-panel {
+      width: min(420px, 100%);
+      margin: 18px auto 0;
+      text-align: left;
+    }
+
+    .special-mode-list {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      display: grid;
+      gap: 10px;
+    }
+
+    .mode-option {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: #fff7f2;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mode-option strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 16px;
+      color: #fff2f7;
+    }
+
+    .mode-option span {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0.82;
+    }
+
+    .mode-option:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
     /* 게임 본편 */
     .game {
       width: 100%;
@@ -458,6 +505,11 @@
       color: #1b2752;
     }
 
+    button.mode-toggle {
+      background: linear-gradient(180deg, #fef2ff, #e8c6ff);
+      color: #3d194c;
+    }
+
     button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
@@ -582,14 +634,26 @@
         <div class="title-kicker">NARI & BORO</div>
         <h1 class="main-title">나리와 보로: 산스의 결투</h1>
         <p class="title-sub">
-          우아함과 손맛이 지배하는 귀족 결투. 타이밍을 맞춰 보로의 뺨을 날리고,
+          우아함과 손맛이 지배하는 귀족 결투. 타이밍을 맞춰 상대의 뺨을 날리고,
           산스의 결투에서 승리를 거머쥐세요.
         </p>
 
         <div class="title-buttons">
           <button id="startBtn">게임 시작</button>
+          <button id="specialModeBtn" class="mode-toggle">특수 모드</button>
           <button id="exitBtn" class="secondary">게임 종료</button>
         </div>
+
+        <div id="specialModePanel" class="special-mode-panel hidden">
+          <div class="special-mode-list">
+            <button id="boboModeBtn" class="mode-option">
+              <strong>보로 모드</strong>
+              <span>보로를 주인공으로 플레이하고, 나리를 상대로 결투합니다.</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="title-note">기본 모드: 나리 vs 보로</div>
       </div>
     </div>
 
@@ -599,7 +663,7 @@
 
       <div class="topbar">
         <div class="status player-status">
-          <h2>나리</h2>
+          <h2 id="playerNameTop">나리</h2>
           <div class="hp-wrap">
             <div class="hp-bar"><div id="playerHp" class="hp-fill"></div></div>
             <strong id="playerHpText">100</strong>
@@ -609,7 +673,7 @@
         <div class="vs">VS</div>
 
         <div class="status enemy">
-          <h2>보로</h2>
+          <h2 id="enemyNameTop">보로</h2>
           <div class="hp-wrap">
             <div class="hp-bar"><div id="enemyHp" class="hp-fill"></div></div>
             <strong id="enemyHpText">100</strong>
@@ -623,6 +687,7 @@
         <div id="playerFighter" class="fighter player">
           <div class="portrait">
             <img
+              id="playerImage"
               src="./images/player.png"
               alt="나리 캐릭터"
               class="character-image"
@@ -630,12 +695,13 @@
             />
             <div class="hand"></div>
           </div>
-          <div class="label">나리</div>
+          <div id="playerLabel" class="label">나리</div>
         </div>
 
         <div id="enemyFighter" class="fighter enemy">
           <div class="portrait">
             <img
+              id="enemyImage"
               src="./images/rival.png"
               alt="보로 캐릭터"
               class="character-image"
@@ -643,7 +709,7 @@
             />
             <div class="hand"></div>
           </div>
-          <div class="label">보로</div>
+          <div id="enemyLabel" class="label">보로</div>
         </div>
 
         <div id="impact" class="impact">찰싹!</div>
@@ -672,7 +738,7 @@
               <div class="zone perfect"></div>
               <div id="marker" class="marker"></div>
             </div>
-            <div class="small">나리의 턴일 때만 게이지가 움직입니다.</div>
+            <div class="small">플레이어의 턴일 때만 게이지가 움직입니다.</div>
           </div>
 
           <div class="buttons">
@@ -685,6 +751,55 @@
   </div>
 
   <script>
+    const MODES = {
+      normal: {
+        key: "normal",
+        playerName: "나리",
+        enemyName: "보로",
+        playerImage: "./images/player.png",
+        enemyImage: "./images/rival.png",
+        introMessage: "귀족의 결투가 시작되었습니다. 나리의 손끝으로 보로를 제압하세요.",
+        restartMessage: "귀족의 결투가 다시 시작되었습니다. 이번엔 더 우아하게 뺨을 날려보세요.",
+        playerTurnMessage: "나리의 턴입니다. 게이지를 보고 타이밍을 맞추세요.",
+        playerPerfect: "Perfect! 나리의 품위 있으면서도 치명적인 일격입니다.",
+        playerGood: "Good! 나리의 타이밍이 꽤 좋았습니다.",
+        playerMiss: "헛손질! 나리의 타이밍이 어긋났습니다.",
+        enemyReady: "보로가 자세를 가다듬고 있습니다...",
+        enemyMiss: "보로의 공격이 빗나갔습니다.",
+        enemyHit: "보로의 공격이 적중했습니다.",
+        enemyCrit: "치명타! 보로가 날카로운 일격을 날렸습니다.",
+        winTitle: "승리!",
+        winText: "보로를 우아하게 쓰러뜨렸습니다.",
+        loseTitle: "패배",
+        loseText: "보로의 손맛에 무릎을 꿇었습니다.",
+        winMessage: "결투 종료. 나리의 손끝이 더 매서웠습니다.",
+        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요."
+      },
+      boro: {
+        key: "boro",
+        playerName: "보로",
+        enemyName: "나리",
+        playerImage: "./images/rival.png",
+        enemyImage: "./images/player.png",
+        introMessage: "보로 모드가 시작되었습니다. 보로의 손끝으로 나리를 제압하세요.",
+        restartMessage: "보로 모드가 다시 시작되었습니다. 이번엔 더 매섭게 일격을 날려보세요.",
+        playerTurnMessage: "보로의 턴입니다. 게이지를 보고 타이밍을 맞추세요.",
+        playerPerfect: "Perfect! 보로의 우아하고도 치명적인 일격입니다.",
+        playerGood: "Good! 보로의 타이밍이 꽤 좋았습니다.",
+        playerMiss: "헛손질! 보로의 타이밍이 어긋났습니다.",
+        enemyReady: "나리가 자세를 가다듬고 있습니다...",
+        enemyMiss: "나리의 공격이 빗나갔습니다.",
+        enemyHit: "나리의 공격이 적중했습니다.",
+        enemyCrit: "치명타! 나리가 날카로운 일격을 날렸습니다.",
+        winTitle: "승리!",
+        winText: "나리를 우아하게 쓰러뜨렸습니다.",
+        loseTitle: "패배",
+        loseText: "나리의 손맛에 무릎을 꿇었습니다.",
+        winMessage: "결투 종료. 보로의 손끝이 더 매서웠습니다.",
+        loseMessage: "결투 종료. 다음에는 더 정확한 타이밍을 노리세요."
+      }
+    };
+
     const state = {
       playerHp: 100,
       enemyHp: 100,
@@ -695,11 +810,15 @@
       busy: false,
       gameOver: false,
       started: false,
+      currentMode: "normal",
     };
 
     const titleScreen = document.getElementById("titleScreen");
     const gameScreen = document.getElementById("gameScreen");
     const startBtn = document.getElementById("startBtn");
+    const specialModeBtn = document.getElementById("specialModeBtn");
+    const specialModePanel = document.getElementById("specialModePanel");
+    const boboModeBtn = document.getElementById("boboModeBtn");
     const exitBtn = document.getElementById("exitBtn");
 
     const playerHpEl = document.getElementById("playerHp");
@@ -719,13 +838,44 @@
     const resultTitle = document.getElementById("resultTitle");
     const resultText = document.getElementById("resultText");
 
+    const playerNameTop = document.getElementById("playerNameTop");
+    const enemyNameTop = document.getElementById("enemyNameTop");
+    const playerLabel = document.getElementById("playerLabel");
+    const enemyLabel = document.getElementById("enemyLabel");
+    const playerImage = document.getElementById("playerImage");
+    const enemyImage = document.getElementById("enemyImage");
+
+    function getMode() {
+      return MODES[state.currentMode];
+    }
+
+    function applyModeToUI() {
+      const mode = getMode();
+
+      playerNameTop.textContent = mode.playerName;
+      enemyNameTop.textContent = mode.enemyName;
+      playerLabel.textContent = mode.playerName;
+      enemyLabel.textContent = mode.enemyName;
+
+      playerImage.src = mode.playerImage;
+      enemyImage.src = mode.enemyImage;
+
+      playerImage.alt = `${mode.playerName} 캐릭터`;
+      enemyImage.alt = `${mode.enemyName} 캐릭터`;
+    }
+
     function updateUI() {
+      const mode = getMode();
+
       playerHpEl.style.width = `${state.playerHp}%`;
       enemyHpEl.style.width = `${state.enemyHp}%`;
       playerHpText.textContent = state.playerHp;
       enemyHpText.textContent = state.enemyHp;
       markerEl.style.left = `${state.marker}%`;
-      turnBadge.textContent = state.turn === "player" ? "나리의 턴" : "보로의 턴";
+      turnBadge.textContent = state.turn === "player"
+        ? `${mode.playerName}의 턴`
+        : `${mode.enemyName}의 턴`;
+
       slapBtn.disabled = state.turn !== "player" || state.busy || state.gameOver || !state.started;
     }
 
@@ -800,37 +950,41 @@
     }
 
     function checkGameOver() {
+      const mode = getMode();
+
       if (state.enemyHp <= 0) {
         state.gameOver = true;
-        resultTitle.textContent = "승리!";
-        resultText.textContent = "보로를 우아하게 쓰러뜨렸습니다.";
+        resultTitle.textContent = mode.winTitle;
+        resultText.textContent = mode.winText;
         overlay.classList.add("show");
-        setMessage("결투 종료. 나리의 손끝이 더 매서웠습니다.");
+        setMessage(mode.winMessage);
       } else if (state.playerHp <= 0) {
         state.gameOver = true;
-        resultTitle.textContent = "패배";
-        resultText.textContent = "보로의 손맛에 무릎을 꿇었습니다.";
+        resultTitle.textContent = mode.loseTitle;
+        resultText.textContent = mode.loseText;
         overlay.classList.add("show");
-        setMessage("결투 종료. 다음에는 더 정확한 타이밍을 노리세요.");
+        setMessage(mode.loseMessage);
       }
 
       updateUI();
     }
 
     function playerAttack() {
+      const mode = getMode();
+
       if (state.turn !== "player" || state.busy || state.gameOver || !state.started) return;
 
       state.busy = true;
       const timing = getTimingResult(state.marker);
 
       if (timing === "perfect") {
-        setMessage("Perfect! 나리의 품위 있으면서도 치명적인 일격입니다.");
+        setMessage(mode.playerPerfect);
         doHit("player", 28, "POW!");
       } else if (timing === "good") {
-        setMessage("Good! 나리의 타이밍이 꽤 좋았습니다.");
+        setMessage(mode.playerGood);
         doHit("player", 18, "찰싹!");
       } else {
-        setMessage("헛손질! 나리의 타이밍이 어긋났습니다.");
+        setMessage(mode.playerMiss);
         showImpact("MISS", arena.clientWidth * 0.62, 180);
       }
 
@@ -844,7 +998,9 @@
     }
 
     function enemyTurn() {
-      setMessage("보로가 자세를 가다듬고 있습니다...");
+      const mode = getMode();
+
+      setMessage(mode.enemyReady);
 
       setTimeout(() => {
         if (state.gameOver) return;
@@ -854,17 +1010,17 @@
         let text = "";
 
         if (roll < 0.2) {
-          setMessage("보로의 공격이 빗나갔습니다.");
+          setMessage(mode.enemyMiss);
           showImpact("MISS", arena.clientWidth * 0.28, 180);
         } else if (roll < 0.75) {
           damage = 16;
           text = "짝!";
-          setMessage("보로의 공격이 적중했습니다.");
+          setMessage(mode.enemyHit);
           doHit("enemy", damage, text);
         } else {
           damage = 24;
           text = "강타!";
-          setMessage("치명타! 보로가 날카로운 일격을 날렸습니다.");
+          setMessage(mode.enemyCrit);
           doHit("enemy", damage, text);
         }
 
@@ -872,7 +1028,7 @@
           if (!state.gameOver) {
             state.turn = "player";
             state.busy = false;
-            setMessage("나리의 턴입니다. 게이지를 보고 타이밍을 맞추세요.");
+            setMessage(mode.playerTurnMessage);
             updateUI();
           }
         }, 700);
@@ -880,6 +1036,8 @@
     }
 
     function restartGame() {
+      const mode = getMode();
+
       state.playerHp = 100;
       state.enemyHp = 100;
       state.turn = "player";
@@ -890,15 +1048,22 @@
       state.gameOver = false;
       state.started = true;
 
+      applyModeToUI();
       overlay.classList.remove("show");
-      setMessage("귀족의 결투가 다시 시작되었습니다. 이번엔 더 우아하게 뺨을 날려보세요.");
+      setMessage(mode.restartMessage);
       updateUI();
     }
 
-    function startGame() {
+    function startGame(modeKey = "normal") {
+      state.currentMode = modeKey;
+      applyModeToUI();
       restartGame();
       titleScreen.classList.add("hidden");
       gameScreen.classList.remove("hidden");
+    }
+
+    function toggleSpecialMode() {
+      specialModePanel.classList.toggle("hidden");
     }
 
     function exitGame() {
@@ -913,11 +1078,15 @@
 
     slapBtn.addEventListener("click", playerAttack);
     resetBtn.addEventListener("click", restartGame);
-    startBtn.addEventListener("click", startGame);
+
+    startBtn.addEventListener("click", () => startGame("normal"));
+    specialModeBtn.addEventListener("click", toggleSpecialMode);
+    boboModeBtn.addEventListener("click", () => startGame("boro"));
     exitBtn.addEventListener("click", exitGame);
 
     window.restartGame = restartGame;
 
+    applyModeToUI();
     updateUI();
     animateGauge();
   </script>
